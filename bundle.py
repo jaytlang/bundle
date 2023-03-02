@@ -67,7 +67,7 @@ if extract:
 		if verbose: print(fname)
 
 		directory = os.path.dirname(fname)
-		if not os.path.exists(directory):
+		if directory != '' and not os.path.exists(directory):
 			os.makedirs(directory)
 
 		with open(fname, 'wb') as f:
@@ -81,6 +81,10 @@ if extract:
 if create:
 	for fname in filelist:
 		if verbose and not extract: print(fname)
+
+		if os.path.isdir(fname):
+			filelist.extend([f"{fname}/{cf}" for cf in os.listdir(fname)])
+			continue
 
 		fnamebytes = bytes(fname, 'ascii')
 
