@@ -19,6 +19,9 @@ archive = None
 truesig = None
 claimedsig = None
 
+class ServerException(Exception): pass
+class SignatureVerificationException(Exception): pass
+
 def usage(err):
 	print(err)
 	print("usage:")
@@ -97,8 +100,10 @@ if create:
 		response = Message.from_conn(conn)
 		to.cancel()
 
-		if response.opcode() != MessageOp.ACK:
-			raise ValueError(f"received bad reply from server ({response.opcode()})")
+		if response.opcode() == MessageOp.ERROR:
+			raise ServerException(response.label())
+		elif response.opcode() != MessageOp.ACK:
+			raise ValueError(f"BUG: received bad opcode ({response.opcode()})")
 
 	if sign:
 		message = Message(MessageOp.SIGN)
@@ -108,11 +113,11 @@ if create:
 		response = Message.from_conn(conn)
 		to.cancel()
 
-		if response.opcode() != MessageOp.ACK:
-			raise ValueError(f"received bad reply from server ({response.opcode()})")
+		if response.opcode() == MessageOp.ERROR:
+			raise ServerException(response.label())
+		elif response.opcode() != MessageOp.ACK:
+			raise ValueError(f"BUG: received bad opcode ({response.opcode()})")
 
-	
-	
 	message = Message(MessageOp.GETBUNDLE)
 	conn.write_bytes(message.to_bytes())
 
@@ -120,8 +125,10 @@ if create:
 	response = Message.from_conn(conn)
 	to.cancel()
 
-	if response.opcode() != MessageOp.BUNDLE:
-		raise ValueError(f"received bad reply from server ({response.opcode()})")
+	if response.opcode() == MessageOp.ERROR:
+		raise ServerException(response.label())
+	elif response.opcode() != MessageOp.BUNDLE:
+		raise ValueError(f"BUG: received bad opcode ({response.opcode()})")
 
 	if not extract:
 		with open(archive, 'wb') as f:
@@ -129,7 +136,7 @@ if create:
 	else:
 		object = Archive.from_bytes(response.file())
 		if object.signature() != claimedsig:
-			raise ValueError("signature is incorrect on extracted archive!")
+			raise SignatureVerificationException("signature is incorrect on extracted archive!")
 		elif verbose: print("signature verified")
 
 		
