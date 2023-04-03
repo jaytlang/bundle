@@ -7,6 +7,8 @@ from timeout import *
 import getopt
 import os
 import sys
+import shutil
+import tempfile
 
 sign = False
 verbose = False
@@ -18,6 +20,11 @@ archive = None
 
 truesig = None
 claimedsig = None
+
+# On Ubuntu, need to symlink /usr/bin/signify -> /bin/signify-openbsd
+signify = shutil.which("signify")
+pubkey = "/etc/signify/bundled.pub"
+has_signify = False
 
 class ServerException(Exception): pass
 class SignatureVerificationException(Exception): pass
@@ -31,6 +38,9 @@ def usage(err):
 
 try: opts, args = getopt.getopt(sys.argv[1:], "cxsvf:")
 except getopt.GetoptError as err: usage(err)
+
+if signify is not None and os.access(pubkey, os.R_OK):
+	has_signify = True
 
 for o, a in opts:
 	if o == '-c': create = True
@@ -76,7 +86,14 @@ if extract:
 		with open(fname, 'wb') as f:
 			f.write(filecontent)
 
-	if sign:
+	if sign and has_signify:
+		if verbose: print("NEW: using local signify")
+
+		if not object.signature_is_okay():
+			raise SignatureVerificationException("signature is incorrect on extracted archive")
+		elif verbose: print("signature verified")
+
+	elif sign:	
 		create = True
 		filelist = object.all_filenames()
 		claimedsig = object.signature()
