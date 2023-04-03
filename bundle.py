@@ -64,9 +64,6 @@ if not filelist and create:
 elif filelist and extract:
 	usage("tried to specify input files to extract operation")
 
-conn = Connection([server_ca, client_ca], client_cert, client_key)
-conn.connect(server_hostname, server_port)
-
 if extract:
 	object = None
 	with open(archive, 'rb') as f:
@@ -99,6 +96,9 @@ if extract:
 		claimedsig = object.signature()
 
 if create:
+	conn = Connection([server_ca, client_ca], client_cert, client_key)
+	conn.connect(server_hostname, server_port)
+
 	for fname in filelist:
 		if verbose and not extract: print(fname)
 
@@ -156,6 +156,6 @@ if create:
 			raise SignatureVerificationException("signature is incorrect on extracted archive!")
 		elif verbose: print("signature verified")
 
+	conn.close()
 		
 
-conn.close()
