@@ -1,8 +1,8 @@
 # Configure me!
 
-client_cert = "jaytlang-cert.pem"
-client_key = "jaytlang-cert.key"
-client_ca = "mitca.pem"
+client_cert = "/etc/ssl/jaytlang.pem"
+client_key = "jaytlang.key"
+client_ca = "/etc/ssl/authority/mitcca.pem"
 server_ca = "serverca.pem"
 
 server_hostname = "eecs-digital-53.mit.edu"
