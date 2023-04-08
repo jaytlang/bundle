@@ -46,6 +46,6 @@ class Connection:
 	def write_bytes(self, bstring):
 		self.conn.sendall(bstring)
 
-	def read_bytes(self, mtu=1500):
+	def read_bytes(self, mtu=16384):
 		return self.conn.recv(mtu)
 
