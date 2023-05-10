@@ -5,7 +5,7 @@ client_key = "jaytlang.key"
 client_ca = "/etc/ssl/authority/mitcca.pem"
 server_ca = "serverca.pem"
 
-server_hostname = "eecs-digital-53.mit.edu"
+server_hostname = "bundle.jtlang.dev"
 server_port = 443
 
 # NO CHANGES REQUIRED BEYOND THIS POINT
