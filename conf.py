@@ -1,9 +1,8 @@
 # Configure me!
 
-client_cert = "/etc/ssl/jaytlang.pem"
-client_key = "jaytlang.key"
-client_ca = "/etc/ssl/authority/mitcca.pem"
-server_ca = "serverca.pem"
+client_cert = "jaytlang-cert.pem"
+client_key = "jaytlang-cert.key"
+client_ca = "mitca.pem"
 
 server_hostname = "bundle.jtlang.dev"
 server_port = 443
