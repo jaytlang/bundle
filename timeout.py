@@ -1,14 +1,8 @@
 import signal
 
+# for now we stub this out!
+# why? because windows doesn't support SIGALRM...
+
 class Timeout:
-	def _handle(self, signum, frame):
-		print(f"timeout of {self._timeout} expired")
-		exit(1)
-
-	def __init__(self, timeout):
-		self._timeout = timeout
-		signal.signal(signal.SIGALRM, self._handle)
-		signal.alarm(self._timeout)
-
-	def cancel(self):
-		signal.alarm(0)
+	def __init__(self, timeout): pass
+	def cancel(self): pass
