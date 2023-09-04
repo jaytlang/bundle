@@ -4,7 +4,7 @@ client_cert = None
 client_key = None
 client_ca = None
 
-server_hostname = "bundle.jtlang.dev"
+server_hostname = "fpga3.mit.edu"
 server_port = 443
 
 # NO CHANGES REQUIRED BEYOND THIS POINT
